@@ -11,7 +11,7 @@ services:
     environment:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
-      POSTGRES_DB: todos
+      POSTGRES_DB: sampledb
       TZ: Asia/Tokyo
     restart: always
 volumes:
