@@ -6,6 +6,7 @@ use axum::{
 use serde::{Deserialize, Serialize};
 
 use dotenv::dotenv;
+use sqlx::PgPool;
 
 async fn root() -> &'static str {
     "Hello, World!"
@@ -25,6 +26,15 @@ async fn main() {
     // もしくは何かしら理由で読み込めなかったとしても、
     // そのエラーを無視して続行することを意味します
     dotenv().ok();
+
+    // db connection
+    let database_url = &env::var("DATABASE_URL").expect("undefined [DATABASE_URL]");
+    // RUST_LOG=debug cargo run とか実行すると以下のログが出力される
+    tracing::debug!("start connect database...");
+    let pool = PgPool::connect(database_url)
+        .await
+        .expect(&format!("fail connect database, url is [{}]", database_url));
+
 
     let app = Router::new()
         .route("/", get(root))
