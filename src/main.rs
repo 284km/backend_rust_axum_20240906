@@ -40,7 +40,8 @@ async fn main() {
         .route("/", get(root))
         .route("/users", post(create_user));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3051").await.unwrap();
+    let api_url = &env::var("API_URL").expect("undefined [API_URL]");
+    let listener = tokio::net::TcpListener::bind(api_url).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 
 }
