@@ -1,7 +1,11 @@
+use std::env;
+
 use axum::{
     http::StatusCode, routing::{get, post}, Json, Router
 };
 use serde::{Deserialize, Serialize};
+
+use dotenv::dotenv;
 
 async fn root() -> &'static str {
     "Hello, World!"
@@ -9,6 +13,19 @@ async fn root() -> &'static str {
 
 #[tokio::main]
 async fn main() {
+    // logging
+    let log_level = env::var("RUST_LOG").unwrap_or("info".to_string());
+    env::set_var("RUST_LOG", log_level);
+    tracing_subscriber::fmt::init();
+    // .ok()の意味:
+    // dotenv()はResult型を返します
+    // .ok()は、成功時には結果を無視し、
+    // 失敗（エラー）が発生した場合もエラーを無視するために使います
+    // つまり、.envファイルが存在しない、
+    // もしくは何かしら理由で読み込めなかったとしても、
+    // そのエラーを無視して続行することを意味します
+    dotenv().ok();
+
     let app = Router::new()
         .route("/", get(root))
         .route("/users", post(create_user));
