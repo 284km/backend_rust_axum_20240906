@@ -12,6 +12,9 @@ dbc:
 dev:
 	cargo watch -x run
 
+debug:
+	RUST_LOG=debug cargo watch -x run
+
 test:
 	cargo test
 
